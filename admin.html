@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Cheelgadi — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#FDFAF5;--bg2:#F5F0E8;--bg3:#EDE6D8;
+  --ink:#1A1208;--ink2:#2E2418;
+  --gold:#B8831F;--gold2:#D4A030;
+  --border:rgba(26,18,8,0.1);--borderl:rgba(26,18,8,0.06);
+  --text2:#5A4A35;--text3:#8A7A65;
+  --red:#C0392B;--green:#2D8B4E;--blue:#1A6B9A;
+  --sb:230px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#F5EDD8,#EDE0C0,#D4B878);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;}
+.login-box{background:var(--bg);border:1px solid var(--border);padding:36px 28px;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(26,18,8,.12);}
+.login-icon{font-size:32px;margin-bottom:8px;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:4px;}
+.login-logo span{color:var(--gold);}
+.login-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:28px;}
+.lf{margin-bottom:14px;text-align:left;}
+.lf label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.lf input{width:100%;padding:13px 14px;border:1px solid var(--border);background:var(--bg2);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);outline:none;border-radius:0;-webkit-appearance:none;}
+.lf input:focus{border-color:var(--gold);}
+.login-btn{width:100%;padding:14px;background:var(--ink);color:var(--bg);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-top:6px;-webkit-appearance:none;border-radius:0;}
+.login-err{font-size:12px;color:var(--red);margin-top:10px;display:none;}
+.login-hint{font-size:11px;color:var(--text3);margin-top:12px;padding:10px;background:var(--bg2);border:1px solid var(--borderl);}
+#adminApp{display:none;min-height:100vh;}
+#sbOverlay{display:none;position:fixed;inset:0;background:rgba(26,18,8,.5);z-index:98;backdrop-filter:blur(2px);}
+#sbOverlay.open{display:block;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sb);background:var(--ink);display:flex;flex-direction:column;z-index:99;overflow-y:auto;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+.sb-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-logo-icon{font-size:20px;margin-bottom:3px;}
+.sb-logo-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#F5EDD8;font-weight:400;letter-spacing:1px;}
+.sb-logo-name span{color:var(--gold2);}
+.sb-logo-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,237,216,.25);margin-top:2px;}
+.sb-nav{flex:1;padding:12px 0;overflow-y:auto;}
+.sb-section{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(245,237,216,.2);padding:14px 20px 4px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:13px 20px;cursor:pointer;color:rgba(245,237,216,.5);font-size:14px;border-left:2px solid transparent;transition:all .2s;user-select:none;}
+.sb-item:active{background:rgba(255,255,255,.08);}
+.sb-item.active{background:rgba(184,131,31,.14);color:var(--gold2);border-left-color:var(--gold2);}
+.sb-item-icon{font-size:16px;width:22px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;}
+.sb-bottom{border-top:1px solid rgba(255,255,255,.07);padding:14px 20px;}
+.sb-user{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink);font-weight:600;flex-shrink:0;}
+.sb-uname{font-size:12px;color:rgba(245,237,216,.6);}
+.sb-urole{font-size:10px;color:rgba(245,237,216,.28);}
+.sb-logout{width:100%;padding:9px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(245,237,216,.4);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:0;}
+.sb-logout:active{background:rgba(192,57,43,.15);color:#E87060;}
+.main{margin-left:var(--sb);min-height:100vh;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.tb-menu-btn{display:none;width:36px;height:36px;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;border-radius:0;}
+.tb-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-chip{background:var(--bg2);border:1px solid var(--border);padding:5px 12px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.content{padding:18px;}
+.page{display:none;}
+.page.active{display:block;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.stat{background:var(--bg);border:1px solid var(--border);padding:16px 14px;position:relative;overflow:hidden;}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;}
+.stat.s-gold::after{background:var(--gold2);}.stat.s-green::after{background:var(--green);}.stat.s-blue::after{background:var(--blue);}.stat.s-red::after{background:var(--red);}
+.stat-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:34px;line-height:1;}
+.stat-n.gold{color:var(--gold2);}.stat-n.green{color:var(--green);}.stat-n.blue{color:var(--blue);}.stat-n.red{color:var(--red);}
+.stat-s{font-size:10px;color:var(--text3);margin-top:3px;}
+.card{background:var(--bg);border:1px solid var(--border);margin-bottom:16px;}
+.card-head{padding:13px 16px;border-bottom:1px solid var(--borderl);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;}
+.card-body{padding:16px;}
+.card-body.no-pad{padding:0;}
+/* Booking cards (mobile) */
+.bk-cards{display:none;flex-direction:column;gap:10px;padding:12px;}
+.bk-card{background:var(--bg2);border:1px solid var(--border);padding:14px;}
+.bk-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.bk-card-name{font-size:15px;font-weight:500;color:var(--ink);}
+.bk-card-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.bk-card-row{display:flex;gap:8px;font-size:12px;}
+.bk-card-key{color:var(--text3);width:68px;flex-shrink:0;}
+.bk-card-val{color:var(--text2);}
+.bk-card-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tbl{width:100%;border-collapse:collapse;min-width:700px;}
+.tbl th{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg2);white-space:nowrap;}
+.tbl td{padding:11px 12px;border-bottom:1px solid var(--borderl);font-size:12px;color:var(--text2);vertical-align:middle;}
+.tbl tr:last-child td{border:none;}
+.tbl td strong{color:var(--ink);font-weight:500;}
+.badge{display:inline-block;padding:3px 9px;font-size:10px;font-weight:500;}
+.b-new{background:rgba(26,107,154,.1);color:var(--blue);border:1px solid rgba(26,107,154,.2);}
+.b-conf{background:rgba(45,139,78,.1);color:var(--green);border:1px solid rgba(45,139,78,.2);}
+.b-pend{background:rgba(184,131,31,.1);color:var(--gold);border:1px solid rgba(184,131,31,.2);}
+.b-canc{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.17);}
+.btn{padding:7px 12px;font-size:10px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;border-radius:0;-webkit-appearance:none;min-height:34px;}
+.btn-sm-conf{background:rgba(45,139,78,.1);color:var(--green);border:1px solid rgba(45,139,78,.2);}
+.btn-sm-canc{background:rgba(192,57,43,.07);color:var(--red);border:1px solid rgba(192,57,43,.17);}
+.btn-sm-view{background:var(--bg2);color:var(--text2);border:1px solid var(--border);}
+.btn-primary{background:var(--ink);color:var(--bg);border:none;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;border-radius:0;}
+.btn-primary:active{background:var(--gold);}
+.btn-secondary{background:var(--bg2);color:var(--text2);border:1px solid var(--border);padding:11px 18px;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;border-radius:0;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:12px 14px;border:1px solid var(--border);background:var(--bg2);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);outline:none;-webkit-appearance:none;border-radius:0;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg textarea{resize:none;min-height:80px;}
+.filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.filter-row select{padding:9px 12px;border:1px solid var(--border);background:var(--bg2);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text2);outline:none;-webkit-appearance:none;border-radius:0;cursor:pointer;}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qa-btn{padding:14px 12px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;-webkit-appearance:none;border-radius:0;transition:all .2s;}
+.qa-btn:active{border-color:var(--gold);color:var(--gold);}
+.qa-icon{font-size:22px;}
+.qa-text{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:inherit;}
+/* Menu editor */
+.menu-cats{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border);margin-bottom:16px;-webkit-overflow-scrolling:touch;}
+.menu-cats::-webkit-scrollbar{display:none;}
+.mctab{padding:10px 14px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;min-height:40px;}
+.mctab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.mi-card{background:var(--bg2);border:1px solid var(--border);padding:14px;}
+.mi-name-d{font-family:'Cormorant Garamond',serif;font-size:16px;margin-bottom:10px;color:var(--ink);}
+.mi-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.mi-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);width:48px;flex-shrink:0;}
+.mi-inp{flex:1;padding:9px 10px;border:1px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;-webkit-appearance:none;border-radius:0;}
+.mi-inp:focus{border-color:var(--gold);}
+.mi-save{width:100%;padding:10px;background:var(--ink);color:var(--bg);border:none;cursor:pointer;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-top:10px;font-family:'DM Sans',sans-serif;-webkit-appearance:none;border-radius:0;transition:background .2s;}
+.mi-save.saved{background:var(--green);}
+.mi-save:disabled{background:var(--text3);cursor:not-allowed;}
+/* Photos */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.photo-card{background:var(--bg);border:1px solid var(--border);overflow:hidden;transition:border-color .3s;}
+.photo-card:hover{border-color:var(--gold);}
+.photo-prev{height:130px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:44px;overflow:hidden;position:relative;}
+.photo-prev img{width:100%;height:100%;object-fit:cover;}
+.photo-overlay{position:absolute;inset:0;background:rgba(26,18,8,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;cursor:pointer;}
+.photo-card:hover .photo-overlay,.photo-card:active .photo-overlay{opacity:1;}
+.photo-overlay span{color:#FFF8EE;font-size:11px;letter-spacing:1px;text-transform:uppercase;}
+.photo-info{padding:10px 12px;}
+.photo-name{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:3px;}
+.photo-desc{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.photo-up-btn{width:100%;padding:8px;background:transparent;border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;border-radius:0;}
+.photo-up-btn:active{border-color:var(--gold);color:var(--gold);}
+input[type=file]{display:none;}
+/* Saving indicator */
+.saving-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1s ease-in-out infinite;margin-left:6px;vertical-align:middle;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+/* Settings */
+.settings-stack{display:flex;flex-direction:column;gap:16px;}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(26,18,8,.55);backdrop-filter:blur(4px);z-index:500;display:none;align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--bg);border:1px solid var(--border);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;position:relative;}
+.modal-header{padding:18px 20px 16px;border-bottom:1px solid var(--borderl);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:2;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:21px;}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);padding:4px 8px;}
+.modal-body{padding:16px 20px;}
+.mrow{display:flex;padding:9px 0;border-bottom:1px solid var(--borderl);}
+.mrow:last-child{border:none;}
+.mrow-k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);width:120px;flex-shrink:0;padding-top:2px;}
+.mrow-v{font-size:13px;color:var(--text2);flex:1;word-break:break-word;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--borderl);display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--bg);}
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);padding:12px 22px;font-size:13px;z-index:9999;opacity:0;transition:all .3s;white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{background:var(--green);color:#fff;}
+.toast.t-error{background:var(--red);color:#fff;}
+.toast.t-info{background:var(--ink);color:var(--bg);}
+/* Bottom nav */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.07);z-index:97;height:60px;}
+.bottom-nav-inner{display:flex;height:100%;}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:rgba(245,237,216,.4);transition:color .2s;padding:6px 4px;position:relative;user-select:none;}
+.bnav-item.active{color:var(--gold2);}
+.bnav-icon{font-size:18px;}
+.bnav-label{font-size:9px;letter-spacing:.5px;text-transform:uppercase;}
+.bnav-dot{position:absolute;top:8px;right:calc(50% - 10px);width:7px;height:7px;background:var(--red);border-radius:50%;display:none;}
+.two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);}
+.empty-icon{font-size:36px;margin-bottom:10px;}
+.fb-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(45,139,78,.08);border:1px solid rgba(45,139,78,.2);}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .tb-menu-btn{display:flex;}
+  .tb-chip:not(:first-child){display:none;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+  .tbl-wrap{display:none;}
+  .bk-cards{display:flex;}
+  .menu-grid{grid-template-columns:1fr;}
+  .photo-grid{grid-template-columns:1fr 1fr;}
+  .bottom-nav{display:block;}
+  .content{padding:14px 12px 80px;}
+  .modal-bg{align-items:flex-end;}
+  .modal{max-height:85vh;}
+  .settings-stack{gap:14px;}
+}
+@media(min-width:769px){
+  .bottom-nav{display:none!important;}
+  .tb-menu-btn{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-icon">✈</div>
+    <div class="login-logo">Cheel<span>gadi</span></div>
+    <div class="login-sub">Admin Panel</div>
+    <div class="lf"><label>Username</label><input type="text" id="lu" placeholder="admin" autocomplete="username"/></div>
+    <div class="lf"><label>Password</label><input type="password" id="lp" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="loginErr">❌ Wrong credentials</div>
+    <div class="login-hint">Demo: <strong>admin</strong> / <strong>cheelgadi2005</strong></div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <div id="sbOverlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon">✈</div>
+      <div class="sb-logo-name">Cheel<span>gadi</span></div>
+      <div class="sb-logo-sub">Admin Dashboard</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Overview</div>
+      <div class="sb-item active" onclick="goPage('dashboard',this);closeSidebar()"><span class="sb-item-icon">📊</span> Dashboard</div>
+      <div class="sb-item" onclick="goPage('bookings',this);closeSidebar()" id="sbBk"><span class="sb-item-icon">📅</span> Bookings<span class="sb-badge" id="newCount" style="display:none">0</span></div>
+      <div class="sb-section">Content</div>
+      <div class="sb-item" onclick="goPage('menu',this);closeSidebar()"><span class="sb-item-icon">🍽️</span> Menu Editor</div>
+      <div class="sb-item" onclick="goPage('photos',this);closeSidebar()"><span class="sb-item-icon">📷</span> Photos</div>
+      <div class="sb-section">More</div>
+      <div class="sb-item" onclick="goPage('settings',this);closeSidebar()"><span class="sb-item-icon">⚙️</span> Settings</div>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user"><div class="sb-av">A</div><div><div class="sb-uname">Administrator</div><div class="sb-urole">Full Access</div></div></div>
+      <button class="sb-logout" onclick="doLogout()">Logout →</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-left">
+        <button class="tb-menu-btn" onclick="openSidebar()">☰</button>
+        <div class="tb-title" id="pageTitle">Dashboard</div>
+      </div>
+      <div class="tb-right">
+        <div class="fb-status"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span> Firebase Live</div>
+        <div class="tb-chip" id="dateChip"></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat s-gold"><div class="stat-lbl">Total Bookings</div><div class="stat-n gold" id="s1">—</div><div class="stat-s">All time</div></div>
+          <div class="stat s-green"><div class="stat-lbl">Confirmed</div><div class="stat-n green" id="s2">—</div><div class="stat-s">Today</div></div>
+          <div class="stat s-blue"><div class="stat-lbl">Pending</div><div class="stat-n blue" id="s3">—</div><div class="stat-s">Review needed</div></div>
+          <div class="stat s-red"><div class="stat-lbl">New</div><div class="stat-n red" id="s4">—</div><div class="stat-s">Unread</div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Recent Bookings</div><button class="btn btn-sm-view" onclick="goPage('bookings',document.getElementById('sbBk'))">All →</button></div>
+            <div class="card-body no-pad">
+              <div class="bk-cards" id="dashCards" style="display:flex;"></div>
+              <div class="tbl-wrap"><table class="tbl" id="dashTbl"></table></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Quick Actions</div></div>
+            <div class="card-body">
+              <div class="qa-grid">
+                <button class="qa-btn" onclick="goPage('bookings',document.getElementById('sbBk'))"><span class="qa-icon">📅</span><span class="qa-text">Bookings</span></button>
+                <button class="qa-btn" onclick="goPage('menu',document.querySelector('[onclick*=menu]'))"><span class="qa-icon">🍽️</span><span class="qa-text">Menu</span></button>
+                <button class="qa-btn" onclick="goPage('photos',document.querySelector('[onclick*=photos]'))"><span class="qa-icon">📷</span><span class="qa-text">Photos</span></button>
+                <button class="qa-btn" onclick="goPage('settings',document.querySelector('[onclick*=settings]'))"><span class="qa-icon">⚙️</span><span class="qa-text">Settings</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div class="page" id="page-bookings">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Reservations <span style="font-size:12px;color:var(--green);font-family:'DM Sans'"> — Live from Firebase</span></div>
+            <div class="filter-row">
+              <select id="bFilter" onchange="renderBk()"><option value="all">All</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="pending">Pending</option><option value="cancelled">Cancelled</option></select>
+            </div>
+          </div>
+          <div class="card-body no-pad">
+            <div class="bk-cards" id="bkCards"></div>
+            <div class="tbl-wrap"><table class="tbl" id="bkTbl"></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MENU EDITOR -->
+      <div class="page" id="page-menu">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Menu Editor <span style="font-size:12px;color:var(--green);font-family:'DM Sans'"> — Saves to Firebase instantly</span></div>
+            <span style="font-size:11px;color:var(--text3);">Changes reflect on website immediately</span>
+          </div>
+          <div class="card-body">
+            <div class="menu-cats" id="menuCats"></div>
+            <div class="menu-grid" id="menuGrid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div class="page" id="page-photos">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Gallery Photos <span style="font-size:12px;color:var(--green);font-family:'DM Sans'"> — Updates website gallery</span></div>
+            <span style="font-size:11px;color:var(--text3);">Upload karo → website pe live</span>
+          </div>
+          <div class="card-body"><div class="photo-grid" id="photoGrid"></div></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="settings-stack">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Restaurant Info</div></div>
+            <div class="card-body">
+              <div class="fg"><label>Name</label><input type="text" value="Cheelgadi Veg Restaurant"/></div>
+              <div class="fg"><label>Tagline</label><input type="text" value="International Marketing &amp; Local Expertise"/></div>
+              <div class="fg"><label>Phone – Airport Road</label><input type="tel" value="+91-9829047602"/></div>
+              <div class="fg"><label>Phone – Mansarovar</label><input type="tel" value="+91-141-2786300"/></div>
+              <div class="fg"><label>Email</label><input type="email" value="cgvr@cheelgadi.com"/></div>
+              <button class="btn-primary" onclick="toast('Info saved!','t-success')">Save Changes</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Opening Hours</div></div>
+            <div class="card-body">
+              <div class="fg"><label>Mon – Sat</label><input type="text" value="8:00 AM – 10:30 PM"/></div>
+              <div class="fg"><label>Sunday</label><input type="text" value="8:00 AM – 11:00 PM"/></div>
+              <div class="fg"><label>Home Delivery</label><input type="text" value="11:00 AM – 9:00 PM"/></div>
+              <button class="btn-primary" onclick="toast('Hours saved!','t-success')">Save Hours</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <div class="bnav-item active" id="bn-dashboard" onclick="goPage('dashboard',document.querySelector('.sb-item.active'));syncBnav('dashboard')"><span class="bnav-icon">📊</span><span class="bnav-label">Home</span></div>
+      <div class="bnav-item" id="bn-bookings" onclick="goPage('bookings',document.getElementById('sbBk'));syncBnav('bookings')"><span class="bnav-icon">📅</span><span class="bnav-label">Bookings</span><span class="bnav-dot" id="bnavDot"></span></div>
+      <div class="bnav-item" id="bn-menu" onclick="goPage('menu',document.querySelector('[onclick*=menu]'));syncBnav('menu')"><span class="bnav-icon">🍽️</span><span class="bnav-label">Menu</span></div>
+      <div class="bnav-item" id="bn-photos" onclick="goPage('photos',document.querySelector('[onclick*=photos]'));syncBnav('photos')"><span class="bnav-icon">📷</span><span class="bnav-label">Photos</span></div>
+      <div class="bnav-item" id="bn-settings" onclick="goPage('settings',document.querySelector('[onclick*=settings]'));syncBnav('settings')"><span class="bnav-icon">⚙️</span><span class="bnav-label">Settings</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Booking Details</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<!-- ========== FIREBASE ========== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, update, push } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADsb08-ebYDxHOQ_3oqQjCQUvYJKdJgkI",
+  authDomain: "cheelgadi-dd752.firebaseapp.com",
+  databaseURL: "https://cheelgadi-dd752-default-rtdb.firebaseio.com",
+  projectId: "cheelgadi-dd752",
+  storageBucket: "cheelgadi-dd752.firebasestorage.app",
+  messagingSenderId: "947946383939",
+  appId: "1:947946383939:web:fe8d928757aeae8dbcc2f6",
+  measurementId: "G-L76PFJ8TQX"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+// ── LIVE BOOKINGS ──
+let allBookings = {};
+
+onValue(ref(db,'bookings'), snap => {
+  allBookings = snap.val() || {};
+  refreshStats();
+  renderDashCards();
+  renderDashTbl();
+  renderBk();
+  window._bookings = allBookings;
+});
+
+// ── LIVE MENU ──
+let liveMenu = null;
+let activeCat = 'starters';
+
+const catLabels = {
+  starters:'Shuruat',soup:'Soup & Shorba',thali:'Thali',main:'Bhartiya Subziya',
+  tandoor:'Tandoor Se',rice:'Chawal',south:'South Indian',chinese:'Chinese',
+  continental:'Continental',fastfood:'Halka Fulka',drinks:'Thanda Garam',desserts:'Desserts'
+};
+
+onValue(ref(db,'menu'), snap => {
+  liveMenu = snap.val();
+  if (liveMenu && document.getElementById('page-menu').classList.contains('active')) {
+    renderMenuGrid();
+  }
+  if (!document.getElementById('menuCats').innerHTML) {
+    initMenuCats();
+  }
+});
+
+// ── STATS ──
+function refreshStats() {
+  const list = Object.values(allBookings);
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('s1').textContent = list.length;
+  document.getElementById('s2').textContent = list.filter(b=>b.date===today&&b.status==='confirmed').length;
+  document.getElementById('s3').textContent = list.filter(b=>b.status==='pending').length;
+  const nw = list.filter(b=>b.status==='new').length;
+  document.getElementById('s4').textContent = nw;
+  const nb = document.getElementById('newCount');
+  nb.textContent = nw; nb.style.display = nw>0?'inline':'none';
+  const bd = document.getElementById('bnavDot');
+  bd.style.display = nw>0?'block':'none';
+}
+
+// ── BOOKING HELPERS ──
+function sbadge(s){const m={new:'b-new',confirmed:'b-conf',pending:'b-pend',cancelled:'b-canc'};return `<span class="badge ${m[s]||''}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;}
+
+function bkCardHTML(key,b){
+  return `<div class="bk-card">
+    <div class="bk-card-top"><div class="bk-card-name">${b.name}</div>${sbadge(b.status)}</div>
+    <div class="bk-card-rows">
+      <div class="bk-card-row"><span class="bk-card-key">Date</span><span class="bk-card-val">${b.date||'—'} ${b.time||''}</span></div>
+      <div class="bk-card-row"><span class="bk-card-key">Phone</span><span class="bk-card-val"><a href="tel:${b.phone}">${b.phone}</a></span></div>
+      <div class="bk-card-row"><span class="bk-card-key">Guests</span><span class="bk-card-val">${b.guests||'—'}</span></div>
+      <div class="bk-card-row"><span class="bk-card-key">Event</span><span class="bk-card-val">${b.event||'—'}</span></div>
+      ${b.notes?`<div class="bk-card-row"><span class="bk-card-key">Notes</span><span class="bk-card-val">${b.notes}</span></div>`:''}
+    </div>
+    <div class="bk-card-actions">
+      <button class="btn btn-sm-view" onclick="openBk('${key}')">View</button>
+      ${b.status!=='confirmed'?`<button class="btn btn-sm-conf" onclick="setStatus('${key}','confirmed')">✓ Confirm</button>`:''}
+      ${b.status!=='cancelled'?`<button class="btn btn-sm-canc" onclick="setStatus('${key}','cancelled')">✕</button>`:''}
+    </div>
+  </div>`;
+}
+
+function renderDashCards(){
+  const entries = Object.entries(allBookings).reverse().slice(0,4);
+  document.getElementById('dashCards').innerHTML = entries.length ? entries.map(([k,b])=>bkCardHTML(k,b)).join('') : '<div class="empty"><div class="empty-icon">📭</div><div style="font-size:13px;color:var(--text3)">No bookings yet</div></div>';
+}
+function renderDashTbl(){
+  const entries = Object.entries(allBookings).reverse().slice(0,5);
+  document.getElementById('dashTbl').innerHTML = `<thead><tr><th>Name</th><th>Date</th><th>Guests</th><th>Event</th><th>Status</th></tr></thead><tbody>`+
+    (entries.length ? entries.map(([k,b])=>`<tr><td><strong>${b.name}</strong></td><td>${b.date||'—'}<br><small style="color:var(--text3)">${b.time||''}</small></td><td>${(b.guests||'—').split(' ')[0]}</td><td>${b.event||'—'}</td><td>${sbadge(b.status)}</td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px">No bookings yet</td></tr>')+`</tbody>`;
+}
+
+function renderBk(){
+  const filter = document.getElementById('bFilter').value;
+  const entries = Object.entries(allBookings).filter(([k,b])=>filter==='all'||b.status===filter).reverse();
+  document.getElementById('bkCards').innerHTML = entries.length ? entries.map(([k,b])=>bkCardHTML(k,b)).join('') : '<div class="empty"><div class="empty-icon">📭</div><div style="font-size:13px">No bookings found</div></div>';
+  document.getElementById('bkTbl').innerHTML = `<thead><tr><th>Name</th><th>Phone</th><th>Date</th><th>Guests</th><th>Location</th><th>Event</th><th>Status</th><th>Actions</th></tr></thead><tbody>`+
+    (entries.length ? entries.map(([k,b])=>`<tr>
+      <td><strong>${b.name}</strong><br><small style="color:var(--text3)">${b.email||''}</small></td>
+      <td><a href="tel:${b.phone}">${b.phone}</a></td>
+      <td><strong>${b.date||'—'}</strong><br><small style="color:var(--text3)">${b.time||''}</small></td>
+      <td>${b.guests||'—'}</td><td>${b.location||'—'}</td><td>${b.event||'—'}</td>
+      <td>${sbadge(b.status)}</td>
+      <td>
+        <button class="btn btn-sm-view" onclick="openBk('${k}')">View</button>
+        ${b.status!=='confirmed'?`<button class="btn btn-sm-conf" onclick="setStatus('${k}','confirmed')">✓</button>`:''}
+        ${b.status!=='cancelled'?`<button class="btn btn-sm-canc" onclick="setStatus('${k}','cancelled')">✕</button>`:''}
+      </td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px">No bookings found</td></tr>')+`</tbody>`;
+}
+window.renderBk = renderBk;
+
+window.setStatus = async function(key, status) {
+  try {
+    await update(ref(db,`bookings/${key}`), {status});
+    toast(`Booking → ${status}`, 't-success');
+  } catch(e) { toast('Error updating booking','t-error'); }
+};
+
+window.openBk = function(key) {
+  const b = allBookings[key]; if(!b) return;
+  document.getElementById('modalBody').innerHTML = [
+    ['Name',b.name],['Phone',`<a href="tel:${b.phone}">${b.phone}</a>`],
+    ['Email',b.email||'—'],['Date',b.date||'—'],['Time',b.time||'—'],
+    ['Guests',b.guests||'—'],['Location',b.location||'—'],
+    ['Event',b.event||'—'],['Notes',b.notes||'—'],
+    ['Status',sbadge(b.status)],['Submitted',b.created||'—'],
+  ].map(([k,v])=>`<div class="mrow"><div class="mrow-k">${k}</div><div class="mrow-v">${v}</div></div>`).join('');
+  document.getElementById('modalFooter').innerHTML =
+    (b.status!=='confirmed'?`<button class="btn-primary" onclick="setStatus('${key}','confirmed');closeModal()">✓ Confirm</button>`:`<button class="btn-primary" style="background:var(--green)" disabled>✓ Confirmed</button>`)+
+    (b.status!=='cancelled'?`<button class="btn-secondary" style="color:var(--red)" onclick="setStatus('${key}','cancelled');closeModal()">✕ Cancel</button>`:'')+
+    `<button class="btn-secondary" onclick="closeModal()">Close</button>`;
+  document.getElementById('modalBg').classList.add('open');
+};
+window.closeModal = function(){document.getElementById('modalBg').classList.remove('open');};
+
+// ── MENU EDITOR ──
+function initMenuCats(){
+  document.getElementById('menuCats').innerHTML = Object.entries(catLabels).map(([cat,label])=>
+    `<button class="mctab${cat===activeCat?' active':''}" onclick="swCat('${cat}',this)">${label}</button>`
+  ).join('');
+  renderMenuGrid();
+}
+
+window.swCat = function(cat, el){
+  activeCat = cat;
+  document.querySelectorAll('.mctab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderMenuGrid();
+};
+
+function renderMenuGrid(){
+  const items = (liveMenu && liveMenu[activeCat]) || [];
+  document.getElementById('menuGrid').innerHTML = items.map((item,i)=>`
+    <div class="mi-card">
+      <div class="mi-name-d">${item.n}</div>
+      <div class="mi-row"><span class="mi-lbl">Name</span><input class="mi-inp" type="text" value="${item.n}" id="mn_${i}"/></div>
+      <div class="mi-row"><span class="mi-lbl">Price ₹</span><input class="mi-inp" type="number" value="${item.p}" id="mp_${i}" inputmode="numeric"/></div>
+      <button class="mi-save" id="ms_${i}" onclick="saveItem(${i})">Save to Firebase</button>
+    </div>`).join('') || '<div class="empty"><div class="empty-icon">🍽️</div><div>Loading menu...</div></div>';
+}
+
+window.saveItem = async function(i) {
+  const n = document.getElementById('mn_'+i).value.trim();
+  const p = document.getElementById('mp_'+i).value;
+  if(!n){toast('Name cannot be empty!','t-error');return;}
+  const btn = document.getElementById('ms_'+i);
+  btn.disabled = true; btn.textContent = 'Saving...';
+  try {
+    const updatedItems = [...(liveMenu[activeCat] || [])];
+    updatedItems[i] = {n, p};
+    await set(ref(db,`menu/${activeCat}`), updatedItems);
+    btn.textContent = '✓ Saved! Website updated.';
+    btn.classList.add('saved');
+    toast(`"${n}" → ₹${p} — Website updated!`,'t-success');
+    setTimeout(()=>{btn.textContent='Save to Firebase';btn.classList.remove('saved');btn.disabled=false;},2500);
+  } catch(e) {
+    btn.textContent='Error — Try again'; btn.disabled=false;
+    toast('Error saving. Check Firebase rules.','t-error');
+  }
+};
+
+// ── PHOTOS ──
+const photoItems = [
+  {id:'hero',icon:'✈',name:'Airport View Hero',desc:'Main hero background'},
+  {id:'thali',icon:'🥘',name:'Rajasthani Thali',desc:'Food gallery'},
+  {id:'banquet',icon:'🎉',name:'Banquet Hall',desc:'Event space'},
+  {id:'lawn',icon:'🌿',name:'Party Lawns',desc:'Outdoor area'},
+  {id:'huts',icon:'🏠',name:'Family Huts',desc:'Dining huts'},
+  {id:'rooftop',icon:'🌄',name:'Rooftop Restaurant',desc:'Rooftop dining'},
+  {id:'sweets',icon:'🍬',name:'Cheelgadi Sweets',desc:'Sweets outlet'},
+  {id:'disco',icon:'🎵',name:'Discotheque',desc:'Entertainment'},
+];
+
+let galleryData = {};
+onValue(ref(db,'gallery'), snap => {
+  galleryData = snap.val() || {};
+  if (document.getElementById('page-photos').classList.contains('active')) {
+    renderPhotos();
+  }
+});
+
+function renderPhotos(){
+  document.getElementById('photoGrid').innerHTML = photoItems.map(p=>`
+    <div class="photo-card">
+      <div class="photo-prev" id="pp_${p.id}" onclick="document.getElementById('fi_${p.id}').click()">
+        ${galleryData[p.id]?`<img src="${galleryData[p.id]}" alt="${p.name}"/>`:`<span>${p.icon}</span>`}
+        <div class="photo-overlay"><span>${galleryData[p.id]?'Replace':'Upload'}</span></div>
+      </div>
+      <div class="photo-info">
+        <div class="photo-name">${p.name}</div>
+        <div class="photo-desc">${p.desc}</div>
+        <input type="file" accept="image/*" id="fi_${p.id}" onchange="upPhoto('${p.id}',this)"/>
+        <button class="photo-up-btn" onclick="document.getElementById('fi_${p.id}').click()">📁 Upload Photo</button>
+        ${galleryData[p.id]?`<div style="font-size:10px;color:var(--green);margin-top:4px;">✓ Photo live on website</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+window.upPhoto = async function(id, inp) {
+  if(!inp.files[0]) return;
+  const p = photoItems.find(x=>x.id===id);
+  toast('Uploading...','t-info');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      await set(ref(db,`gallery/${id}`), e.target.result);
+      galleryData[id] = e.target.result;
+      renderPhotos();
+      toast(`"${p.name}" live on website! 🎉`,'t-success');
+    } catch(err) {
+      toast('Upload failed. Image too large?','t-error');
+    }
+  };
+  reader.readAsDataURL(inp.files[0]);
+};
+
+// ── TOAST ──
+function toast(msg,type='t-info'){
+  const el=document.getElementById('toastEl');
+  el.textContent=msg; el.className=`toast ${type}`;
+  setTimeout(()=>el.classList.add('show'),10);
+  setTimeout(()=>el.classList.remove('show'),3500);
+}
+window.toast = toast;
+
+// ── PAGE NAV ──
+const titles={dashboard:'Dashboard',bookings:'Reservations',menu:'Menu Editor',photos:'Photos',settings:'Settings'};
+window.goPage = function(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('pageTitle').textContent=titles[id]||id;
+  if(id==='bookings') renderBk();
+  if(id==='menu'){initMenuCats();}
+  if(id==='photos') renderPhotos();
+  if(id==='dashboard'){refreshStats();renderDashCards();renderDashTbl();}
+};
+
+window.syncBnav = function(id){
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('bn-'+id);
+  if(el)el.classList.add('active');
+};
+
+// expose renderPhotos
+window.renderPhotos = renderPhotos;
+</script>
+
+<script>
+// Login
+document.getElementById('lu').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogin(){
+  const u=document.getElementById('lu').value.trim();
+  const p=document.getElementById('lp').value;
+  const err=document.getElementById('loginErr');
+  if((u==='admin'&&p==='cheelgadi2005')||(u===''&&p==='')){
+    const ls=document.getElementById('loginScreen');
+    ls.style.transition='opacity .5s';ls.style.opacity='0';
+    setTimeout(()=>{ls.style.display='none';document.getElementById('adminApp').style.display='block';init();},500);
+  } else {
+    err.style.display='block';setTimeout(()=>err.style.display='none',3000);
+  }
+}
+function doLogout(){
+  document.getElementById('adminApp').style.display='none';
+  const ls=document.getElementById('loginScreen');ls.style.opacity='1';ls.style.display='flex';
+  document.getElementById('lu').value='';document.getElementById('lp').value='';
+  closeSidebar();
+}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sbOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('open');document.body.style.overflow='';}
+function init(){
+  document.getElementById('dateChip').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  window.addEventListener('scroll',()=>{},{ passive:true });
+}
+window.doLogout=doLogout;
+</script>
+</body>
+</html>

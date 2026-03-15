@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Cheelgadi Veg Restaurant | Airport Road, Jaipur | Est. 2005</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#FDFAF5;--bg2:#F5F0E8;--bg3:#EDE6D8;--bg4:#E4DAC8;
+  --ink:#1A1208;--ink2:#2E2418;
+  --gold:#9B6F1A;--gold2:#B8831F;--gold3:#D4A030;
+  --text2:#5A4A35;--text3:#8A7A65;
+  --border:rgba(26,18,8,0.1);--borderl:rgba(26,18,8,0.06);
+  --green:#2D8B4E;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+@media(pointer:fine){body{cursor:none;}#cur,#cur2{display:block;}}
+#cur{display:none;position:fixed;width:6px;height:6px;background:var(--gold2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s;}
+#cur2{display:none;position:fixed;width:28px;height:28px;border:1px solid rgba(184,131,31,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+#loader{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.ld-plane{font-size:48px;position:absolute;animation:ldP 2.8s cubic-bezier(.4,0,.2,1) forwards;opacity:0;}
+@keyframes ldP{0%{transform:translateX(-200px) translateY(60px);opacity:0;}15%{opacity:1;}60%{transform:translateX(10px) translateY(0) rotate(-8deg);opacity:1;}100%{transform:translateX(240px) translateY(-110px) rotate(-10deg);opacity:0;}}
+.ld-name{position:absolute;font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,56px);font-weight:300;letter-spacing:8px;text-transform:uppercase;color:var(--ink);opacity:0;animation:ldN 1s 1.4s ease forwards;}
+@keyframes ldN{to{opacity:1;}}
+.ld-sub{position:absolute;top:calc(50% + 46px);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);opacity:0;animation:ldN 1s 1.8s ease forwards;}
+.ld-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--gold2);width:0;animation:ldB 3s ease forwards;}
+@keyframes ldB{to{width:100%;}}
+.ld-skip{position:absolute;bottom:24px;right:20px;background:transparent;border:1px solid var(--border);color:var(--text3);padding:8px 16px;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:64px;transition:background .4s,border-bottom .4s;}
+nav.scrolled{background:rgba(253,250,245,.97);border-bottom:1px solid var(--borderl);backdrop-filter:blur(16px);}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-icon{font-size:17px;animation:navFly 4s ease-in-out infinite;}
+@keyframes navFly{0%,100%{transform:translateX(0);}50%{transform:translateX(4px) rotate(-5deg);}}
+.nav-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:2px;color:var(--ink);}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nav-links a{color:var(--text3);text-decoration:none;font-size:11px;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;padding:8px 11px;transition:color .2s;}
+.nav-links a:hover{color:var(--gold2);}
+.nav-cta{background:var(--ink)!important;color:var(--bg)!important;padding:9px 20px!important;font-weight:500!important;}
+.nav-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
+.nav-ham span{display:block;width:22px;height:1.5px;background:var(--ink);transition:all .3s;}
+.nav-overlay{position:fixed;inset:0;background:rgba(26,18,8,.45);z-index:299;display:none;backdrop-filter:blur(2px);}
+.nav-overlay.open{display:block;}
+.nav-drawer{position:fixed;top:0;right:0;bottom:0;width:72vw;max-width:280px;background:var(--bg);z-index:300;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding:80px 28px 32px;box-shadow:-8px 0 32px rgba(26,18,8,.12);}
+.nav-drawer.open{transform:translateX(0);}
+.nav-drawer a{display:block;font-size:17px;color:var(--ink);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--borderl);font-family:'Cormorant Garamond',serif;font-weight:300;letter-spacing:1px;transition:color .2s;}
+.nav-drawer a:hover{color:var(--gold2);}
+.nav-drawer a:last-child{border:none;}
+.nav-drawer .nd-cta{margin-top:20px;background:var(--ink);color:var(--bg);text-align:center;padding:14px;font-family:'DM Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:none;}
+.nd-close{position:absolute;top:20px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);}
+.hero{height:100vh;min-height:580px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:0 5% 8vh;}
+.hero-sky{position:absolute;inset:0;background:linear-gradient(160deg,#F5EDD8 0%,#EDD8B0 25%,#D4A868 55%,#B87040 75%,#8B4020 100%);}
+.hero-sun{position:absolute;top:10%;left:64%;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,#FFF5D0 0%,#FFD870 40%,#E8A830 70%,transparent 100%);filter:blur(3px);animation:sunG 4s ease-in-out infinite alternate;}
+@keyframes sunG{from{transform:scale(1);opacity:.85;}to{transform:scale(1.1);opacity:1;}}
+.hero-sun-halo{position:absolute;top:10%;left:64%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,80,.2),transparent 70%);transform:translate(-30%,-10%);animation:sunG 4s ease-in-out infinite alternate;}
+.cloud{position:absolute;background:rgba(255,255,255,.5);border-radius:60px;filter:blur(14px);}
+.cl1{width:220px;height:40px;top:20%;left:5%;animation:cd 18s linear infinite alternate;}
+.cl2{width:150px;height:30px;top:32%;left:-20px;animation:cd2 22s 4s linear infinite alternate;}
+.cl3{width:180px;height:35px;top:15%;right:4%;animation:cd2 20s 2s linear infinite alternate;}
+@keyframes cd{0%{transform:translateX(0);}100%{transform:translateX(18px);}}
+@keyframes cd2{0%{transform:translateX(0);}100%{transform:translateX(-16px);}}
+.hero-plane{position:absolute;z-index:3;animation:hpFly 14s ease-in-out infinite;}
+@keyframes hpFly{0%{right:-200px;top:30%;transform:rotate(0) scale(.6);}30%{right:22%;top:22%;transform:rotate(-6deg) scale(.82);}60%{right:55%;top:14%;transform:rotate(-4deg) scale(.94);}100%{right:112%;top:4%;transform:rotate(-8deg) scale(.65);}}
+.hp-svg{width:180px;filter:drop-shadow(0 4px 14px rgba(80,40,10,.2));}
+.hp-trail{position:absolute;right:0;top:50%;transform:translateY(-50%);height:2px;border-radius:2px;background:linear-gradient(to left,rgba(255,255,255,.45),transparent);animation:hpT 14s ease-in-out infinite;}
+@keyframes hpT{0%{width:0;opacity:0;}18%{width:50px;opacity:.55;}75%{width:240px;opacity:.15;}100%{width:0;opacity:0;}}
+.city{position:absolute;bottom:0;left:0;right:0;height:180px;background:rgba(60,35,12,.82);clip-path:polygon(0 100%,0 62%,2% 48%,3% 28%,3.5% 14%,4% 14%,4% 28%,5% 38%,6.5% 50%,8% 48%,9% 38%,10% 22%,10.5% 12%,11% 12%,11% 38%,12% 46%,14% 52%,16% 50%,17% 40%,18% 24%,19% 24%,19% 40%,21% 50%,23% 54%,25% 52%,27% 38%,28% 16%,28.5% 12%,29% 12%,29% 38%,31% 48%,33% 54%,36% 50%,37% 38%,38% 14%,38.5% 10%,39% 10%,39% 38%,41% 48%,43% 54%,46% 52%,48% 40%,50% 20%,50.5% 16%,51% 16%,51% 40%,53% 50%,55% 56%,58% 50%,60% 38%,61% 16%,61.5% 12%,62% 12%,62% 38%,64% 50%,66% 56%,69% 50%,71% 38%,72% 14%,72.5% 10%,73% 10%,73% 38%,75% 48%,77% 54%,80% 50%,82% 36%,83% 16%,83.5% 12%,84% 12%,84% 36%,86% 48%,88% 54%,91% 46%,93% 28%,94% 14%,94% 28%,95% 38%,97% 48%,100% 54%,100% 100%);}
+.rwy{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:12px;}
+.rwy span{width:3px;height:3px;border-radius:50%;background:rgba(255,210,50,.75);animation:rlb .9s ease-in-out infinite alternate;}
+.rwy span:nth-child(even){animation-delay:.45s;}
+@keyframes rlb{from{opacity:.15;}to{opacity:1;}}
+.hero-content{position:relative;z-index:5;width:100%;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.h-eye{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;opacity:0;animation:fadeUp .7s .3s ease forwards;}
+.h-eye-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,245,220,.9);}
+.h-eye-t{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,245,220,.85);}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(46px,9vw,100px);font-weight:300;line-height:.92;color:#FFF8EE;opacity:0;animation:fadeUp .9s .5s ease forwards;text-shadow:0 2px 24px rgba(60,30,0,.3);}
+.hero h1 em{font-style:italic;color:#FFD870;display:block;}
+.h-meta{display:flex;align-items:center;gap:12px;margin:20px 0 24px;opacity:0;animation:fadeUp .8s .7s ease forwards;}
+.h-meta-l{width:30px;height:1px;background:rgba(255,230,160,.3);}
+.h-meta-t{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,245,220,.55);}
+.h-desc{font-size:15px;color:rgba(255,245,220,.68);line-height:1.85;max-width:480px;margin-bottom:32px;font-weight:300;opacity:0;animation:fadeUp .8s .85s ease forwards;}
+.h-btns{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s 1s ease forwards;}
+.btn-fill{display:inline-block;padding:14px 32px;background:#FFF8EE;color:var(--ink);font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+.btn-fill:hover{background:#FFD870;transform:translateY(-2px);}
+.btn-ghost{display:inline-block;padding:13px 26px;background:transparent;color:#FFF8EE;font-size:12px;font-weight:400;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid rgba(255,245,220,.35);transition:border-color .2s;}
+.btn-ghost:hover{background:rgba(255,245,220,.1);}
+.marquee{background:var(--ink);overflow:hidden;padding:12px 0;}
+.mq-inner{display:flex;animation:mq 20s linear infinite;white-space:nowrap;}
+.mq-item{padding:0 32px;font-size:10px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:rgba(253,250,245,.4);display:flex;align-items:center;gap:10px;}
+.mq-dot{width:3px;height:3px;border-radius:50%;background:var(--gold2);}
+@keyframes mq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.sec{padding:72px 5%;}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.rv.show{opacity:1;transform:translateY(0);}
+.rv-d1{transition-delay:.1s;}.rv-d2{transition-delay:.2s;}
+.eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold2);display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.eyebrow::after{content:'';width:24px;height:1px;background:var(--gold2);}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:300;color:var(--ink);line-height:1.15;margin-bottom:12px;}
+.sec-h em{font-style:italic;color:var(--gold2);}
+.sec-p{font-size:14px;color:var(--text2);line-height:1.9;font-weight:300;}
+.about-bg{background:var(--bg);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.about-p{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:12px;font-weight:300;}
+.about-p strong{color:var(--ink);font-weight:500;}
+.about-quote{padding:16px 20px;border-left:2px solid var(--gold2);margin:22px 0;background:var(--bg2);}
+.about-quote p{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--ink2);line-height:1.7;margin:0;}
+.about-quote cite{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);display:block;margin-top:8px;font-style:normal;}
+.about-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:28px;}
+.an{background:var(--bg);padding:18px 12px;text-align:center;}
+.an-n{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--gold2);line-height:1;}
+.an-l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-top:4px;}
+.about-box{background:var(--bg3);border:1px solid var(--border);padding:44px 32px;text-align:center;position:relative;}
+.abox-plane{font-size:64px;display:block;margin-bottom:16px;animation:abP 3.5s ease-in-out infinite;}
+@keyframes abP{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-12px) rotate(-8deg);}}
+.abox-q{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--ink2);line-height:1.6;}
+.abox-attr{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-top:12px;}
+.abox-tag{position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:7px 20px;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+.off-bg{background:var(--bg2);}
+.off-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
+.off-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.off-card{background:var(--bg);padding:26px 20px;transition:background .3s;position:relative;}
+.off-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold2),transparent);opacity:0;transition:opacity .3s;}
+.off-card:hover{background:var(--bg2);}
+.off-card:hover::after{opacity:1;}
+.off-icon{font-size:28px;margin-bottom:12px;display:block;}
+.off-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--ink);margin-bottom:6px;}
+.off-desc{font-size:12px;color:var(--text2);line-height:1.75;font-weight:300;}
+.off-tag{display:inline-block;margin-top:12px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);border:1px solid rgba(155,111,26,.25);padding:2px 8px;}
+.menu-bg{background:var(--bg);}
+.menu-tabs-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-top:24px;}
+.menu-tabs-wrap::-webkit-scrollbar{display:none;}
+.menu-tabs{display:flex;border-bottom:1px solid var(--border);width:max-content;min-width:100%;}
+.mtab{padding:10px 16px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;letter-spacing:1px;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;min-height:40px;}
+.mtab.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.menu-note{font-size:11px;color:var(--text3);font-style:italic;margin-top:6px;}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:24px;}
+.mcard{background:var(--bg);padding:16px;transition:background .2s;position:relative;}
+.mcard:hover{background:var(--bg2);}
+.mcard-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.mcard-cat{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);border:1px solid rgba(155,111,26,.22);padding:2px 7px;}
+.veg-m{display:inline-flex;align-items:center;gap:3px;border:1px solid rgba(45,139,78,.3);padding:2px 7px;}
+.vm-d{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.vm-t{font-size:9px;color:var(--green);letter-spacing:.5px;}
+.mcard-name{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--ink);margin-bottom:5px;}
+.mcard-price{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold2);}
+.mcard-price small{font-size:10px;color:var(--text3);font-family:'DM Sans',sans-serif;}
+.loc-bg{background:var(--bg2);}
+.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:8px;}
+.loc-card{background:var(--bg);transition:background .3s;}
+.loc-card:hover{background:var(--bg2);}
+.loc-head{padding:20px 22px 16px;border-bottom:1px solid var(--borderl);}
+.loc-num{font-family:'Cormorant Garamond',serif;font-size:40px;color:rgba(155,111,26,.15);line-height:1;float:right;}
+.loc-name{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--ink);margin-bottom:3px;}
+.loc-area{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.loc-body{padding:16px 22px;}
+.lrow{display:flex;gap:10px;margin-bottom:12px;}
+.lrow-ic{font-size:13px;margin-top:1px;flex-shrink:0;}
+.lrow-t strong{display:block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold2);margin-bottom:2px;}
+.lrow-t span{font-size:13px;color:var(--text2);line-height:1.6;}
+.lrow-t a{color:var(--text2);text-decoration:none;}
+.loc-foot{padding:12px 22px;border-top:1px solid var(--borderl);font-size:11px;color:var(--text3);font-style:italic;}
+.gal-bg{background:var(--bg3);}
+.gal-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:40px;}
+.gal-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:200px 200px;gap:8px;}
+.gi{background:var(--bg4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;border:1px solid var(--border);cursor:pointer;}
+.gi:first-child{grid-row:span 2;}
+.gi-icon{font-size:clamp(42px,5vw,62px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.gi:hover .gi-icon{transform:scale(1.12);}
+.gi-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--text2);text-align:center;padding:0 12px;}
+.gi-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.gi-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,18,8,.88),transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;opacity:0;transition:opacity .3s;}
+.gi:hover .gi-ov{opacity:1;}
+.gi-ov h4{font-family:'Cormorant Garamond',serif;font-size:17px;color:#FFF8EE;}
+.gi-ov p{font-size:12px;color:rgba(255,248,238,.55);margin-top:3px;}
+.cta-strip{background:var(--ink);padding:48px 5%;text-align:center;}
+.cta-strip h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,44px);font-weight:300;color:#F5EDD8;margin-bottom:8px;}
+.cta-strip p{font-size:14px;color:rgba(245,237,216,.55);margin-bottom:28px;}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.cta-btn-w{display:inline-block;padding:14px 32px;background:#F5EDD8;color:var(--ink);font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none;}
+.cta-btn-o{display:inline-block;padding:13px 28px;background:transparent;color:#F5EDD8;font-size:12px;font-weight:400;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid rgba(245,237,216,.3);}
+.cta-phones{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.cta-phone{color:var(--gold3);font-size:15px;text-decoration:none;font-family:'Cormorant Garamond',serif;font-style:italic;}
+.cont-bg{background:var(--bg);}
+.cont-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:52px;max-width:1100px;margin:0 auto;}
+.cont-sub{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:28px;font-weight:300;}
+.ci{display:flex;gap:12px;margin-bottom:18px;}
+.ci-icon{width:38px;height:38px;flex-shrink:0;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.ci-b strong{display:block;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:2px;}
+.ci-b span{font-size:13px;color:var(--text2);line-height:1.6;}
+.ci-b a{color:inherit;text-decoration:none;}
+.hrs{background:var(--bg2);border:1px solid var(--border);margin-top:24px;}
+.hrs-head{padding:11px 16px;border-bottom:1px solid var(--border);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);}
+.hrs-body{padding:12px 16px;}
+.hr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--borderl);font-size:12px;}
+.hr:last-child{border:none;}
+.hr span{color:var(--text3);}
+.hr strong{color:var(--text2);font-weight:400;}
+.cform{background:var(--bg2);border:1px solid var(--border);padding:32px;}
+.cform-h{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--ink);margin-bottom:4px;}
+.cform-s{font-size:12px;color:var(--text3);font-style:italic;margin-bottom:24px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:12px 13px;border:1px solid var(--border);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold2);}
+.fg textarea{resize:none;min-height:80px;}
+.fg-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sub-btn{width:100%;padding:14px;background:var(--ink);color:var(--bg);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;margin-top:4px;-webkit-appearance:none;border-radius:0;transition:background .2s;}
+.sub-btn:hover{background:var(--gold2);}
+.sub-btn:disabled{background:var(--text3);cursor:not-allowed;}
+footer{background:var(--ink);border-top:1px solid rgba(253,250,245,.07);}
+.ft{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding:48px 5% 32px;max-width:1200px;margin:0 auto;}
+.ft-brand-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;letter-spacing:2px;color:#F5EDD8;}
+.ft-brand-name span{color:var(--gold3);}
+.ft-brand-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(245,237,216,.28);display:block;margin-top:3px;}
+.ft-brand-desc{font-size:12px;color:rgba(245,237,216,.38);line-height:1.9;margin-top:14px;font-weight:300;}
+.ft-col-t{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold3);margin-bottom:16px;font-weight:500;}
+.ft-col a{display:block;color:rgba(245,237,216,.4);text-decoration:none;font-size:12px;margin-bottom:9px;transition:color .2s;}
+.ft-col a:hover{color:var(--gold3);}
+.ft-col p{font-size:12px;color:rgba(245,237,216,.4);margin-bottom:7px;line-height:1.6;}
+.ft-bot{border-top:1px solid rgba(253,250,245,.07);padding:16px 5%;}
+.ft-bot-in{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.ft-copy{font-size:11px;color:rgba(245,237,216,.2);}
+.veg-m{display:flex;align-items:center;gap:6px;}
+.vsq{width:13px;height:13px;border:1.5px solid #4CAF73;display:flex;align-items:center;justify-content:center;}
+.vsq::after{content:'';width:6px;height:6px;border-radius:50%;background:#4CAF73;}
+.veg-m span{font-size:10px;color:rgba(77,175,99,.55);letter-spacing:1px;}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);padding:12px 24px;font-size:13px;z-index:9999;opacity:0;transition:all .35s;white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.success{background:var(--green);color:#fff;}
+.toast.error{background:#C0392B;color:#fff;}
+/* Loading spinner for menu */
+.menu-loading{text-align:center;padding:40px;color:var(--text3);font-size:14px;}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .nav-ham{display:flex;}
+  nav{padding:0 4%;height:58px;}
+  .hero{padding:0 4% 10vh;min-height:100svh;}
+  .hero h1{font-size:clamp(42px,11vw,68px);}
+  .h-desc{font-size:14px;max-width:100%;}
+  .h-btns{flex-direction:column;gap:10px;}
+  .btn-fill,.btn-ghost{text-align:center;padding:14px 20px;}
+  .sec{padding:52px 4%;}
+  .about-grid{grid-template-columns:1fr;gap:32px;}
+  .about-box{padding:36px 24px;}
+  .off-head{flex-direction:column;align-items:flex-start;margin-bottom:28px;}
+  .off-grid{grid-template-columns:1fr 1fr;}
+  .off-card{padding:20px 16px;}
+  .menu-grid{grid-template-columns:1fr 1fr;}
+  .mcard{padding:14px 12px;}
+  .loc-grid{grid-template-columns:1fr;}
+  .gal-intro{grid-template-columns:1fr;gap:16px;margin-bottom:24px;}
+  .gal-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .gi:first-child{grid-row:span 1;}
+  .gi{height:140px;}
+  .cont-wrap{grid-template-columns:1fr;gap:32px;}
+  .fg-2{grid-template-columns:1fr;}
+  .cform{padding:22px 16px;}
+  .ft{grid-template-columns:1fr 1fr;gap:24px;padding:36px 4% 24px;}
+  .ft-col:nth-child(4){grid-column:span 2;}
+}
+@media(max-width:420px){
+  .off-grid{grid-template-columns:1fr;}
+  .menu-grid{grid-template-columns:1fr;}
+  .ft{grid-template-columns:1fr;}
+  .ft-col:nth-child(4){grid-column:span 1;}
+  .hero h1{font-size:40px;}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur2"></div>
+
+<div id="loader">
+  <div class="ld-plane">✈</div>
+  <div class="ld-name">Cheelgadi</div>
+  <div class="ld-sub">Airport Road · Jaipur · Est. 2005</div>
+  <div class="ld-bar"></div>
+  <button class="ld-skip" onclick="skipLoader()">Skip ✕</button>
+</div>
+
+<div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
+  <button class="nd-close" onclick="closeDrawer()">✕</button>
+  <a href="#about" onclick="closeDrawer()">About</a>
+  <a href="#offerings" onclick="closeDrawer()">Offerings</a>
+  <a href="#menu" onclick="closeDrawer()">Menu</a>
+  <a href="#locations" onclick="closeDrawer()">Locations</a>
+  <a href="#gallery" onclick="closeDrawer()">Gallery</a>
+  <a href="#contact" onclick="closeDrawer()">Contact</a>
+  <a href="#contact" class="nd-cta" onclick="closeDrawer()">Reserve a Table</a>
+</div>
+
+<nav id="nav">
+  <a class="nav-brand" href="#">
+    <span class="nav-icon">✈</span>
+    <span class="nav-name">Cheelgadi</span>
+  </a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#offerings">Offerings</a>
+    <a href="#menu">Menu</a>
+    <a href="#locations">Locations</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="nav-cta">Reserve</a>
+  </div>
+  <button class="nav-ham" id="navHam" onclick="openDrawer()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero">
+  <div class="hero-sky"></div>
+  <div class="hero-sun-halo"></div>
+  <div class="hero-sun"></div>
+  <div class="cloud cl1"></div>
+  <div class="cloud cl2"></div>
+  <div class="cloud cl3"></div>
+  <div class="hero-plane">
+    <div class="hp-trail"></div>
+    <svg class="hp-svg" viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#D4C090"/></linearGradient>
+        <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#E8D090"/><stop offset="100%" stop-color="#A07830"/></linearGradient>
+      </defs>
+      <ellipse cx="140" cy="55" rx="98" ry="16" fill="url(#g1)"/>
+      <path d="M238 55 Q275 55 278 55 Q270 53 238 51Z" fill="#FFFFFF"/>
+      <path d="M238 55 Q275 55 278 55 Q270 57 238 59Z" fill="#E8D890"/>
+      <path d="M42 55 Q8 57 5 57 Q18 55 42 53Z" fill="#D4B060"/>
+      <path d="M118 50 L155 53 L196 16 L166 50Z" fill="url(#g2)" opacity=".95"/>
+      <path d="M118 60 L155 57 L196 94 L166 60Z" fill="#906020" opacity=".8"/>
+      <path d="M52 53 L66 53 L57 26Z" fill="#C8A040"/>
+      <path d="M42 55 L72 54 L86 40 L62 53Z" fill="url(#g2)"/>
+      <path d="M42 55 L72 56 L86 70 L62 57Z" fill="#906020" opacity=".8"/>
+      <rect x="138" y="49" width="9" height="6" rx="3" fill="rgba(100,180,240,.9)"/>
+      <rect x="152" y="49" width="9" height="6" rx="3" fill="rgba(100,180,240,.9)"/>
+      <rect x="166" y="49" width="9" height="6" rx="3" fill="rgba(100,180,240,.8)"/>
+      <rect x="180" y="49" width="9" height="6" rx="3" fill="rgba(100,180,240,.7)"/>
+      <ellipse cx="156" cy="64" rx="17" ry="6" fill="#906020"/>
+      <ellipse cx="156" cy="64" rx="14" ry="4.5" fill="#704810"/>
+      <rect x="42" y="52" width="196" height="2.5" fill="rgba(155,111,26,.45)" rx="1"/>
+      <text x="132" y="63" font-family="Georgia" font-size="8" fill="rgba(80,50,0,.7)" font-weight="bold" text-anchor="middle">CHEELGADI</text>
+    </svg>
+  </div>
+  <div class="city"><div class="rwy" id="rwy"></div></div>
+  <div class="hero-content">
+    <div class="h-eye"><div class="h-eye-dot"></div><div class="h-eye-t">Famous for Airport Views · Pure Veg · Since 2005</div></div>
+    <h1>Cheelgadi<em>Veg Restaurant</em></h1>
+    <div class="h-meta"><div class="h-meta-l"></div><div class="h-meta-t">Airport Road · Jaipur · Rajasthan</div></div>
+    <p class="h-desc">Watch aircraft take off against the golden Jaipur sky while savouring authentic Rajasthani cuisine — inaugurated by the Ex Education Minister of Rajasthan in 2005.</p>
+    <div class="h-btns">
+      <a href="#menu" class="btn-fill">View Menu</a>
+      <a href="#contact" class="btn-ghost">Reserve a Table</a>
+    </div>
+  </div>
+</section>
+
+<div class="marquee"><div class="mq-inner" id="mq"></div></div>
+
+<section class="sec about-bg" id="about">
+  <div class="about-grid rv">
+    <div>
+      <div class="eyebrow">Our Story</div>
+      <h2 class="sec-h">A vision born on <em>30 January 2005</em></h2>
+      <p class="about-p"><strong>Cheelgadi Veg Restaurant Pvt. Ltd.</strong> was founded by <strong>Mr. D.P. Meena</strong> and inaugurated by the Ex Education Minister of Rajasthan, <strong>Mr. Ghanshyam Tiwari</strong>.</p>
+      <p class="about-p">Located on <strong>Airport Road, Jaipur</strong>, Cheelgadi is celebrated for exceptional pure vegetarian cuisine — and for the extraordinary experience of watching aircraft ascend and descend while you dine.</p>
+      <p class="about-p">The chief attraction is its <strong>high standard of cuisine</strong> and captivating rural Rajasthani ambience that has earned global appreciation.</p>
+      <div class="about-quote">
+        <p>"As the customer steps in, he has a feeling of comfort — as if he is at his own home."</p>
+        <cite>— Cheelgadi Restaurant</cite>
+      </div>
+      <div class="about-nums">
+        <div class="an"><div class="an-n">20+</div><div class="an-l">Years</div></div>
+        <div class="an"><div class="an-n">3</div><div class="an-l">Locations</div></div>
+        <div class="an"><div class="an-n">4.1★</div><div class="an-l">Google</div></div>
+      </div>
+    </div>
+    <div style="position:relative;" class="rv rv-d2">
+      <div class="about-box">
+        <span class="abox-plane">✈</span>
+        <div class="abox-q">"Where Rajasthani flavours meet the magic of aircraft in flight."</div>
+        <div class="abox-attr">Cheelgadi · Airport Road, Jaipur</div>
+      </div>
+      <div class="abox-tag">Pure Veg · Est. 2005</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec off-bg" id="offerings">
+  <div class="off-head rv">
+    <div><div class="eyebrow">What We Offer</div><h2 class="sec-h" style="max-width:380px;">Beyond great <em>food</em></h2></div>
+    <p class="sec-p" style="max-width:300px;">A complete hospitality destination — dining, events, accommodation and entertainment.</p>
+  </div>
+  <div class="off-grid rv rv-d1">
+    <div class="off-card"><span class="off-icon">🍽️</span><div class="off-name">AC Restaurant</div><div class="off-desc">Fine dining — Indian, Chinese, Continental, Rajasthani & South Indian.</div><div class="off-tag">Dine In</div></div>
+    <div class="off-card"><span class="off-icon">🌄</span><div class="off-name">Roof Top</div><div class="off-desc">Open-air rooftop with live airport views while you dine.</div><div class="off-tag">✈ Views</div></div>
+    <div class="off-card"><span class="off-icon">🎉</span><div class="off-name">Banquet Halls</div><div class="off-desc">Rajasthani-style halls for weddings & corporate events.</div><div class="off-tag">Events</div></div>
+    <div class="off-card"><span class="off-icon">🌿</span><div class="off-name">Party Lawns</div><div class="off-desc">Open-air lawns for outdoor parties and large gatherings.</div><div class="off-tag">Outdoor</div></div>
+    <div class="off-card"><span class="off-icon">🏠</span><div class="off-name">Family Huts</div><div class="off-desc">Private rural-style huts for intimate dining experiences.</div><div class="off-tag">Unique</div></div>
+    <div class="off-card"><span class="off-icon">🛏️</span><div class="off-name">Rooms</div><div class="off-desc">Comfortable accommodation for travellers visiting Jaipur.</div><div class="off-tag">Stay</div></div>
+    <div class="off-card"><span class="off-icon">🎵</span><div class="off-name">Discotheque</div><div class="off-desc">Exciting entertainment to complement your dining experience.</div><div class="off-tag">Fun</div></div>
+    <div class="off-card"><span class="off-icon">🍬</span><div class="off-name">Sweets</div><div class="off-desc">Authentic Indian sweets at our Durgapura outlet.</div><div class="off-tag">Mithai</div></div>
+  </div>
+</section>
+
+<section class="sec menu-bg" id="menu">
+  <div class="rv">
+    <div class="eyebrow">Online Menu</div>
+    <h2 class="sec-h">Our <em>Cuisine</em></h2>
+    <p class="menu-note">* Prices subject to change. VAT & Service Tax applicable.</p>
+  </div>
+  <div class="menu-tabs-wrap rv">
+    <div class="menu-tabs" id="menuTabs">
+      <button class="mtab active" onclick="loadMenu('starters',this)">Shuruat</button>
+      <button class="mtab" onclick="loadMenu('soup',this)">Soup</button>
+      <button class="mtab" onclick="loadMenu('thali',this)">Thali</button>
+      <button class="mtab" onclick="loadMenu('main',this)">Subziya</button>
+      <button class="mtab" onclick="loadMenu('tandoor',this)">Tandoor</button>
+      <button class="mtab" onclick="loadMenu('rice',this)">Chawal</button>
+      <button class="mtab" onclick="loadMenu('south',this)">South Indian</button>
+      <button class="mtab" onclick="loadMenu('chinese',this)">Chinese</button>
+      <button class="mtab" onclick="loadMenu('continental',this)">Continental</button>
+      <button class="mtab" onclick="loadMenu('fastfood',this)">Halka Fulka</button>
+      <button class="mtab" onclick="loadMenu('drinks',this)">Drinks</button>
+      <button class="mtab" onclick="loadMenu('desserts',this)">Desserts</button>
+    </div>
+  </div>
+  <div class="menu-grid rv" id="mgrid">
+    <div class="menu-loading">Loading menu...</div>
+  </div>
+</section>
+
+<section class="sec loc-bg" id="locations">
+  <div class="rv" style="margin-bottom:32px;">
+    <div class="eyebrow">Find Us</div>
+    <h2 class="sec-h">Our <em>Locations</em></h2>
+    <p class="sec-p" style="margin-top:6px;">Three locations across Jaipur — the same quality and warmth everywhere.</p>
+  </div>
+  <div class="loc-grid rv rv-d1">
+    <div class="loc-card">
+      <div class="loc-head"><div class="loc-num">01</div><div class="loc-name">Cheelgadi Veg Restaurant</div><div class="loc-area">✈ Airport Road · Main</div></div>
+      <div class="loc-body">
+        <div class="lrow"><div class="lrow-ic">📍</div><div class="lrow-t"><strong>Address</strong><span>Airport Road, Jaipur – 302029, Rajasthan</span></div></div>
+        <div class="lrow"><div class="lrow-ic">📞</div><div class="lrow-t"><strong>Phone</strong><span><a href="tel:+919829047602">+91-9829047602</a> / <a href="tel:+911412790400">0141-2790400</a></span></div></div>
+        <div class="lrow"><div class="lrow-ic">✉️</div><div class="lrow-t"><strong>Email</strong><span><a href="mailto:cgvr@cheelgadi.com">cgvr@cheelgadi.com</a></span></div></div>
+      </div>
+      <div class="loc-foot">AC Dining · Rooftop · Banquet · Party Lawn · Family Huts · Rooms · Discotheque</div>
+    </div>
+    <div class="loc-card">
+      <div class="loc-head"><div class="loc-num">02</div><div class="loc-name">Cheelgadi Veg Restaurant</div><div class="loc-area">Mansarovar</div></div>
+      <div class="loc-body">
+        <div class="lrow"><div class="lrow-ic">📍</div><div class="lrow-t"><strong>Address</strong><span>Patel Marg, New Sanganer Road, Mansarovar, Jaipur – 302020</span></div></div>
+        <div class="lrow"><div class="lrow-ic">📞</div><div class="lrow-t"><strong>Phone</strong><span><a href="tel:+911412786300">+91-141-2786300</a> / <a href="tel:+918290786300">8290786300</a></span></div></div>
+        <div class="lrow"><div class="lrow-ic">✉️</div><div class="lrow-t"><strong>Email</strong><span><a href="mailto:cgvr@cheelgadi.com">cgvr@cheelgadi.com</a></span></div></div>
+      </div>
+      <div class="loc-foot">AC Dining · Banquet · Party Events</div>
+    </div>
+    <div class="loc-card">
+      <div class="loc-head"><div class="loc-num">03</div><div class="loc-name">Cheelgadi Sweets</div><div class="loc-area">Durgapura · Tonk Road</div></div>
+      <div class="loc-body">
+        <div class="lrow"><div class="lrow-ic">📍</div><div class="lrow-t"><strong>Address</strong><span>S-7 Lakhanpuri, Opp City Plex, Durgapura, Tonk Road, Jaipur – 302018</span></div></div>
+        <div class="lrow"><div class="lrow-ic">✉️</div><div class="lrow-t"><strong>Email</strong><span><a href="mailto:cgsweets@cheelgadi.com">cgsweets@cheelgadi.com</a></span></div></div>
+        <div class="lrow"><div class="lrow-ic">🌐</div><div class="lrow-t"><strong>Website</strong><span>www.cheelgadi.com</span></div></div>
+      </div>
+      <div class="loc-foot">Authentic Indian Sweets · Mithai · Namkeen</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec gal-bg" id="gallery">
+  <div class="gal-intro rv">
+    <div><div class="eyebrow">Gallery</div><h2 class="sec-h">A glimpse of <em>Cheelgadi</em></h2></div>
+    <p class="sec-p">From runway views to royal Rajasthani banquets — every corner tells a story.</p>
+  </div>
+  <div class="gal-grid rv rv-d1" id="galleryGrid">
+    <div class="gi"><div class="gi-icon">✈</div><div class="gi-label">Airport Views</div><div class="gi-ov"><h4>Famous Airport Views</h4><p>Watch aircraft take off and land while you dine</p></div></div>
+    <div class="gi"><div class="gi-icon">🥘</div><div class="gi-label">Rajasthani Thali</div><div class="gi-ov"><h4>Rajasthani Thali — ₹425</h4><p>Dal, Baati, Churma, Sabzi, Raita & Meetha</p></div></div>
+    <div class="gi"><div class="gi-icon">🎉</div><div class="gi-label">Banquet Halls</div><div class="gi-ov"><h4>Grand Banquet Halls</h4><p>Rajasthani-style for weddings & events</p></div></div>
+    <div class="gi"><div class="gi-icon">🌿</div><div class="gi-label">Party Lawns</div><div class="gi-ov"><h4>Open Party Lawns</h4><p>Outdoor celebrations with airport backdrop</p></div></div>
+    <div class="gi"><div class="gi-icon">🏠</div><div class="gi-label">Family Huts</div><div class="gi-ov"><h4>Rural Family Huts</h4><p>Private Rajasthani ambience dining</p></div></div>
+  </div>
+</section>
+
+<div class="cta-strip rv">
+  <h2>Dine with a view unlike any other</h2>
+  <p>Book your table at Cheelgadi — Airport Road, Jaipur</p>
+  <div class="cta-actions">
+    <a href="#contact" class="cta-btn-w">Reserve a Table</a>
+    <a href="#menu" class="cta-btn-o">View Full Menu</a>
+  </div>
+  <div class="cta-phones">
+    <a href="tel:+919829047602" class="cta-phone">📞 +91-9829047602</a>
+    <a href="tel:+911412790400" class="cta-phone">📞 0141-2790400</a>
+  </div>
+</div>
+
+<section class="sec cont-bg" id="contact">
+  <div class="cont-wrap">
+    <div class="rv">
+      <div class="eyebrow">Get In Touch</div>
+      <h2 class="sec-h">Contact <em>Us</em></h2>
+      <p class="cont-sub">Cheelgadi welcomes your queries. For table reservations, event bookings or any enquiry — reach out.</p>
+      <div class="ci"><div class="ci-icon">📍</div><div class="ci-b"><strong>Main Location</strong><span>Airport Road, Jaipur – 302029, Rajasthan, India</span></div></div>
+      <div class="ci"><div class="ci-icon">📞</div><div class="ci-b"><strong>Phone – Airport Road</strong><span><a href="tel:+919829047602">+91-9829047602</a> / <a href="tel:+911412790400">0141-2790400</a></span></div></div>
+      <div class="ci"><div class="ci-icon">📞</div><div class="ci-b"><strong>Phone – Mansarovar</strong><span><a href="tel:+911412786300">+91-141-2786300</a> / <a href="tel:+918290786300">8290786300</a></span></div></div>
+      <div class="ci"><div class="ci-icon">✉️</div><div class="ci-b"><strong>Email</strong><span><a href="mailto:cgvr@cheelgadi.com">cgvr@cheelgadi.com</a></span></div></div>
+      <div class="hrs">
+        <div class="hrs-head">Opening Hours</div>
+        <div class="hrs-body">
+          <div class="hr"><span>Mon – Sat</span><strong>8:00 AM – 10:30 PM</strong></div>
+          <div class="hr"><span>Sunday</span><strong>8:00 AM – 11:00 PM</strong></div>
+          <div class="hr"><span>Public Holidays</span><strong>Open as usual ✓</strong></div>
+          <div class="hr"><span>Home Delivery</span><strong>11:00 AM – 9:00 PM</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv rv-d2 cform">
+      <div class="cform-h">Reserve a Table</div>
+      <div class="cform-s">Fill in the form and we will contact you shortly.</div>
+      <div class="fg"><label>Full Name</label><input type="text" id="bkName" placeholder="Your name..." autocomplete="name"/></div>
+      <div class="fg-2">
+        <div class="fg"><label>Phone</label><input type="tel" id="bkPhone" placeholder="+91 XXXXX XXXXX" inputmode="tel"/></div>
+        <div class="fg"><label>Email</label><input type="email" id="bkEmail" placeholder="your@email.com"/></div>
+      </div>
+      <div class="fg-2">
+        <div class="fg"><label>Date</label><input type="date" id="bkDate"/></div>
+        <div class="fg"><label>Time</label><input type="time" id="bkTime"/></div>
+      </div>
+      <div class="fg-2">
+        <div class="fg"><label>Guests</label>
+          <select id="bkGuests"><option>1–5 Guests</option><option>6–15 Guests</option><option>16–50 Guests</option><option>50+ (Banquet/Event)</option></select>
+        </div>
+        <div class="fg"><label>Location</label>
+          <select id="bkLocation"><option>Airport Road</option><option>Mansarovar</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Event Type</label>
+        <select id="bkEvent"><option>Regular Dining</option><option>Birthday Party</option><option>Wedding / Engagement</option><option>Corporate Event</option><option>Other</option></select>
+      </div>
+      <div class="fg"><label>Special Requirements</label><textarea id="bkNotes" placeholder="Any special requests or event details..."></textarea></div>
+      <button class="sub-btn" id="bookBtn" onclick="submitBooking()">Send Reservation Request →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">
+    <div>
+      <div class="ft-brand-name">✈ <span>Cheelgadi</span></div>
+      <span class="ft-brand-sub">Veg Restaurant · Group of Companies</span>
+      <p class="ft-brand-desc">Born 30 Jan 2005. Inaugurated by Ex Education Minister of Rajasthan. Famous for live airport views and authentic Rajasthani cuisine.</p>
+    </div>
+    <div class="ft-col"><div class="ft-col-t">Navigate</div><a href="#about">About Us</a><a href="#offerings">Offerings</a><a href="#menu">Online Menu</a><a href="#locations">Locations</a><a href="#gallery">Gallery</a><a href="#contact">Contact</a></div>
+    <div class="ft-col"><div class="ft-col-t">Offerings</div><a href="#offerings">AC Restaurant</a><a href="#offerings">Roof Top</a><a href="#offerings">Banquet Halls</a><a href="#offerings">Party Lawns</a><a href="#offerings">Family Huts</a><a href="#offerings">Discotheque</a><a href="#offerings">Sweets</a></div>
+    <div class="ft-col"><div class="ft-col-t">Contact</div><p>Airport Road, Jaipur – 302029</p><p><a href="tel:+919829047602" style="color:inherit">+91-9829047602</a></p><p><a href="tel:+911412790400" style="color:inherit">0141-2790400</a></p><p><a href="mailto:cgvr@cheelgadi.com" style="color:inherit">cgvr@cheelgadi.com</a></p></div>
+  </div>
+  <div class="ft-bot"><div class="ft-bot-in">
+    <div class="ft-copy">© 2025 Cheelgadi Group of Companies, Jaipur. All Rights Reserved.</div>
+    <div class="veg-m"><div class="vsq"></div><span>100% Pure Vegetarian</span></div>
+  </div></div>
+</footer>
+
+<div class="toast" id="toastEl"></div>
+
+<!-- ========== FIREBASE ========== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADsb08-ebYDxHOQ_3oqQjCQUvYJKdJgkI",
+  authDomain: "cheelgadi-dd752.firebaseapp.com",
+  databaseURL: "https://cheelgadi-dd752-default-rtdb.firebaseio.com",
+  projectId: "cheelgadi-dd752",
+  storageBucket: "cheelgadi-dd752.firebasestorage.app",
+  messagingSenderId: "947946383939",
+  appId: "1:947946383939:web:fe8d928757aeae8dbcc2f6",
+  measurementId: "G-L76PFJ8TQX"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+// ── DEFAULT MENU DATA (fallback if Firebase empty) ──
+const defaultMenu = {
+  starters:[{n:'Paneer Tikka',p:'275'},{n:'Veg Seek Kebab',p:'220'},{n:'Veg Spring Roll',p:'220'},{n:'Aloo Pudina Chaat',p:'110'},{n:'Masala Papad',p:'50'},{n:'Papad Roasted / Fried',p:'30'},{n:'Golden Fried Paneer',p:'275'}],
+  soup:[{n:'Tamatar Dhania Ka Shorba',p:'120'},{n:'Cream of Tomato',p:'120'},{n:'Clear Soup',p:'120'},{n:"Hot 'N' Sour Soup",p:'120'},{n:'Minestrone Soup',p:'120'}],
+  thali:[{n:'Cheelgadi Special Thali',p:'425'},{n:'Rajasthani Thali',p:'425'}],
+  main:[{n:'Cheelgadi Special',p:'300'},{n:'Shahi Paneer',p:'270'},{n:'Paneer Tikka Lababdar',p:'290'},{n:'Paneer Butter Masala',p:'270'},{n:'Kadhai Paneer',p:'270'},{n:'Matar Paneer',p:'270'},{n:'Palak Paneer',p:'270'},{n:'Malai Kofta',p:'270'},{n:'Mix Vegetable',p:'240'},{n:'Mushroom Peas Curry',p:'280'},{n:'Rajasthani Gatta Curry',p:'220'},{n:'Kadi Pakodi',p:'240'},{n:'Dal Makhani',p:'200'},{n:'Pindi Chana',p:'200'},{n:'Dum Aloo Banarsi',p:'240'},{n:'Jeera Aloo',p:'200'}],
+  tandoor:[{n:'Roti',p:'22'},{n:'Butter Roti',p:'30'},{n:'Missi Roti',p:'40'},{n:'Tikkar',p:'40'},{n:'Plain Naan',p:'70'},{n:'Butter Naan',p:'100'},{n:'Garlic Naan',p:'150'},{n:'Paneer Naan',p:'150'},{n:'Stuffed Naan',p:'125'},{n:'Lachcha Paratha',p:'100'},{n:'Stuffed Paratha',p:'120'}],
+  rice:[{n:'Plain Rice',p:'120'},{n:'Zeera / Veg Pulao',p:'140'},{n:'Navratan Pulao',p:'200'},{n:'Veg Dum Biryani',p:'200'}],
+  south:[{n:'Plain Dosa',p:'140'},{n:'Masala Dosa',p:'160'},{n:'Rawa Masala Dosa',p:'180'},{n:'Paper Masala Dosa',p:'180'},{n:'Uttapam',p:'160'},{n:'Idli Sambhar',p:'140'}],
+  chinese:[{n:'Chilly Paneer Dry / Gravy',p:'300'},{n:'Sweet N Sour Veg',p:'180'},{n:'Veg Manchurian',p:'200'},{n:'American Choupsey',p:'200'},{n:'Veg Chowmein',p:'200'},{n:'Veg Hakka Noodles',p:'180'},{n:'Veg Fried Rice',p:'200'}],
+  continental:[{n:'Cheelgadi Sizzler',p:'350'},{n:'Cheese Shashlik',p:'325'},{n:'Veg Steak on Sizzler',p:'325'},{n:'Baked Vegetable',p:'220'},{n:'Pasta Tomato Basil',p:'240'},{n:'Pasta Cheese Sauce',p:'260'},{n:'Baked Macaroni',p:'220'}],
+  fastfood:[{n:'Pao Bhaji',p:'130'},{n:'Chhola Bhatura',p:'160'},{n:'Veg Pakoda',p:'110'},{n:'Paneer Pakoda',p:'175'},{n:'Club Sandwich',p:'160'},{n:'French Fries',p:'110'},{n:'Mix Veg Pizza',p:'220'},{n:'Cheelgadi Special Pizza',p:'300'}],
+  drinks:[{n:'Jal Jeera',p:'40'},{n:'Chaach',p:'40'},{n:'Kesar Thandai',p:'100'},{n:'Fresh Lemon Soda',p:'60'},{n:'Cheelgadi Special Lassi',p:'100'},{n:'Cold Coffee',p:'120'},{n:'Cold Coffee + Ice Cream',p:'160'},{n:'Milk Shake',p:'120'},{n:'Tea',p:'40'},{n:'Coffee',p:'50'}],
+  desserts:[{n:'Vanilla Ice Cream',p:'100'},{n:'Kesar Pista Ice Cream',p:'130'},{n:'Chocolate / Butterscotch',p:'130'},{n:'Fruit Salad + Ice Cream',p:'130'},{n:'Rasgulla / Rasmalai (2 pcs)',p:'100'},{n:'Gulab Jamun (2 pcs)',p:'100'},{n:'Moong Dal / Gajar Halwa',p:'100'}],
+};
+
+const catLabels = {
+  starters:'Shuruat',soup:'Soup',thali:'Thali',main:'Main',tandoor:'Tandoor',
+  rice:'Chawal',south:'South Indian',chinese:'Chinese',continental:'Continental',
+  fastfood:'Halka Fulka',drinks:'Drinks',desserts:'Desserts'
+};
+
+// ── LIVE MENU from Firebase ──
+let currentCat = 'starters';
+let liveMenu = null;
+
+onValue(ref(db,'menu'), snap => {
+  const data = snap.val();
+  liveMenu = data || defaultMenu;
+  // Seed Firebase if empty
+  if (!data) {
+    set(ref(db,'menu'), defaultMenu);
+  }
+  renderMenu(currentCat);
+});
+
+// ── GALLERY photos from Firebase ──
+onValue(ref(db,'gallery'), snap => {
+  const data = snap.val();
+  if (data) renderGallery(data);
+});
+
+function renderGallery(data) {
+  const grid = document.getElementById('galleryGrid');
+  const photos = [
+    {id:'hero', icon:'✈', label:'Airport Views', ov:'Famous Airport Views', ovp:'Watch aircraft take off and land'},
+    {id:'thali', icon:'🥘', label:'Rajasthani Thali', ov:'Rajasthani Thali — ₹425', ovp:'Dal, Baati, Churma, Sabzi & Meetha'},
+    {id:'banquet', icon:'🎉', label:'Banquet Halls', ov:'Grand Banquet Halls', ovp:'Rajasthani-style for weddings & events'},
+    {id:'lawn', icon:'🌿', label:'Party Lawns', ov:'Open Party Lawns', ovp:'Outdoor celebrations'},
+    {id:'huts', icon:'🏠', label:'Family Huts', ov:'Rural Family Huts', ovp:'Private Rajasthani ambience'},
+  ];
+  grid.innerHTML = photos.map(p => {
+    const imgSrc = data[p.id];
+    return `<div class="gi">
+      ${imgSrc ? `<img class="gi-img" src="${imgSrc}" alt="${p.label}"/>` : `<div class="gi-icon">${p.icon}</div>`}
+      <div class="gi-label">${p.label}</div>
+      <div class="gi-ov"><h4>${p.ov}</h4><p>${p.ovp}</p></div>
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER MENU ──
+function renderMenu(cat) {
+  currentCat = cat;
+  const data = liveMenu || defaultMenu;
+  const items = data[cat] || [];
+  const label = catLabels[cat] || cat;
+  const g = document.getElementById('mgrid');
+  if (!items.length) { g.innerHTML = '<div class="menu-loading">No items found.</div>'; return; }
+  g.innerHTML = items.map(item => `
+    <div class="mcard">
+      <div class="mcard-top">
+        <div class="mcard-cat">${label}</div>
+        <div class="veg-m"><div class="vm-d"></div><div class="vm-t">Veg</div></div>
+      </div>
+      <div class="mcard-name">${item.n}</div>
+      <div class="mcard-price">₹${item.p} <small>+ taxes</small></div>
+    </div>`).join('');
+}
+
+// Make loadMenu global
+window.loadMenu = function(cat, el) {
+  document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderMenu(cat);
+};
+
+// ── BOOKING SUBMIT ──
+window.submitBooking = async function() {
+  const name = document.getElementById('bkName').value.trim();
+  const phone = document.getElementById('bkPhone').value.trim();
+  if (!name || !phone) { showToast('Naam aur phone zaroori hai!', 'error'); return; }
+
+  const btn = document.getElementById('bookBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const booking = {
+      name,
+      phone,
+      email: document.getElementById('bkEmail').value,
+      date: document.getElementById('bkDate').value,
+      time: document.getElementById('bkTime').value,
+      guests: document.getElementById('bkGuests').value,
+      location: document.getElementById('bkLocation').value,
+      event: document.getElementById('bkEvent').value,
+      notes: document.getElementById('bkNotes').value,
+      status: 'new',
+      created: new Date().toLocaleString('en-IN'),
+      timestamp: Date.now()
+    };
+
+    await push(ref(db, 'bookings'), booking);
+    showToast('Booking request sent! We will call you shortly. 🙏', 'success');
+
+    // Clear form
+    ['bkName','bkPhone','bkEmail','bkDate','bkTime','bkNotes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  } catch(e) {
+    showToast('Error sending booking. Please call us directly.', 'error');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Send Reservation Request →';
+};
+
+function showToast(msg, type) {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.className = `toast ${type}`;
+  setTimeout(() => el.classList.add('show'), 10);
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+window.showToast = showToast;
+</script>
+
+<script>
+// Custom cursor
+if(window.matchMedia('(pointer:fine)').matches){
+  const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  setInterval(()=>{rx+=(mx-rx)*.14;ry+=(my-ry)*.14;cur2.style.left=rx+'px';cur2.style.top=ry+'px';},16);
+}
+
+// Loader
+function skipLoader(){
+  const ld=document.getElementById('loader');
+  ld.style.transition='opacity .6s';ld.style.opacity='0';
+  setTimeout(()=>{ld.style.display='none';initSite();},600);
+}
+setTimeout(skipLoader,3200);
+
+// Nav scroll
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);},{passive:true});
+
+// Mobile drawer
+function openDrawer(){document.getElementById('navDrawer').classList.add('open');document.getElementById('navOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('navDrawer').classList.remove('open');document.getElementById('navOverlay').classList.remove('open');document.body.style.overflow='';}
+
+function initSite(){
+  // Runway lights
+  const rwy=document.getElementById('rwy');
+  for(let i=0;i<16;i++){const s=document.createElement('span');rwy.appendChild(s);}
+  // Marquee
+  const mq=document.getElementById('mq');
+  const items=['Pure Vegetarian','Airport Road Jaipur','Est. 2005','Rajasthani Cuisine','Chinese & Continental','Banquet & Party','Family Huts','Rooftop Dining','Cheelgadi Sweets','Home Delivery','AC Restaurant','Discotheque'];
+  [...items,...items].forEach(t=>{
+    const d=document.createElement('div');d.className='mq-item';
+    d.innerHTML=`<span>${t}</span><div class="mq-dot"></div>`;mq.appendChild(d);
+  });
+  // Scroll reveal
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show');});},{threshold:.06,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+</script>
+</body>
+</html>
